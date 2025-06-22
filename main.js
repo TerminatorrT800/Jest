@@ -2,58 +2,62 @@ function ship(shipLength) {
   let length = shipLength;
   let hits = 0;
 
-  const isSunk = () => hits >= length
+  const isSunk = () => hits >= length;
 
-  const hit = () => hits++
+  const hit = () => hits++;
 
-  const getHits = () => hits
+  const getHits = () => hits;
 
-  const getLength = () => length
+  const getLength = () => length;
 
   return {
-    isSunk, hit, getHits, getLength
-  }
+    isSunk,
+    hit,
+    getHits,
+    getLength,
+  };
 }
-
 
 function gameBoard(size) {
   let boardSize = size;
-  let ships = []
-  let missedAttacks = []
-  let occupiedCoords = new Set()
+  let ships = [];
+  let missedAttacks = [];
+  let occupiedCoords = new Set();
 
   let boardMap = (boardSize) => {
-    let board = {}
+    let board = {};
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < size; j++) {
-        board[`${i},${j}`] = { ship: null, isHit: null }
+        board[`${i},${j}`] = { ship: null, isHit: null };
       }
     }
     return board;
-  }
+  };
 
-  let board = boardMap(boardSize)
+  let board = boardMap(boardSize);
   const placeShip = (startCoord, direction, ship) => {
-    const [x, y] = startCoord.split(',').map(Number)
+    const [x, y] = startCoord.split(",").map(Number);
 
-    if (direction == 'horizontal' && boardSize < ship.getLength() + x || direction == 'vertical' && boardSize < ship.getLength() + y) {
-      console.log('Invalid coordinates or ship lenght!')
+    if (
+      (direction == "horizontal" && boardSize < ship.getLength() + x) ||
+      (direction == "vertical" && boardSize < ship.getLength() + y)
+    ) {
+      console.log("Invalid coordinates or ship lenght!");
     } else {
-      let shipCoords = new Set()
+      let shipCoords = new Set();
       switch (direction) {
-        case 'horizontal':
+        case "horizontal":
           for (let i = 0; i < ship.getLength(); i++) {
-            shipCoords.add(`${x + i},${y}`)
+            shipCoords.add(`${x + i},${y}`);
           }
           break;
-        case 'vertical':
+        case "vertical":
           for (let i = 0; i < ship.getLength(); i++) {
-            shipCoords.add(`${x},${y + i}`)
+            shipCoords.add(`${x},${y + i}`);
           }
           break;
       }
       let able = true;
-
 
       for (const coord of shipCoords) {
         if (occupiedCoords.has(coord)) {
@@ -62,17 +66,16 @@ function gameBoard(size) {
         }
       }
       if (able == true) {
-        ships.push(ship)
-        shipCoords.forEach(cord => {
-          occupiedCoords.add(cord)
-          board[cord].ship = ship
-        })
-      }
-      else return false
+        ships.push(ship);
+        shipCoords.forEach((cord) => {
+          occupiedCoords.add(cord);
+          board[cord].ship = ship;
+        });
+      } else return false;
     }
-  }
+  };
 
-  const allShipsSunk = () => ships.every(ship => ship.isSunk());
+  const allShipsSunk = () => ships.every((ship) => ship.isSunk());
 
   const receiveAttack = (coord) => {
     if (board[coord].isHit != null) return;
@@ -80,23 +83,57 @@ function gameBoard(size) {
     board[coord].isHit = true;
 
     if (board[coord].ship != null) {
-      board[coord].ship.hit()
-      return 'Hit'
+      board[coord].ship.hit();
+      return "Hit";
+    } else {
+      missedAttacks.push(coord);
+      return "Miss";
     }
-    else {
-      missedAttacks.push(coord)
-      return 'Miss'
+  };
+
+  const getMissedAttacks = () => missedAttacks;
+  const getBoard = () => board;
+
+  const printBoard = () => {
+    for (let y = 0; y < boardSize; y++) {
+      let row = "";
+      for (let x = 0; x < boardSize; x++) {
+        const cell = board[`${x}, ${y}`];
+        if (cell.isHit == true && cell.ship != null) {
+          row += " X ";
+        } else if (cell.isHit === true) {
+          row += " O ";
+        } else if (cell.ship != null) {
+          row += " S ";
+        } else row += " ~ ";
+      }
+      console.log(row);
     }
-  }
-
-  const getMissedAttacks = () => missedAttacks
-  const getBoard = ()=> board
-
-
+  };
 
   return {
-    placeShip, allShipsSunk, receiveAttack, getMissedAttacks
-  }
-
+    placeShip,
+    allShipsSunk,
+    receiveAttack,
+    getMissedAttacks,
+    getBoard,
+    printBoard,
+  };
 }
 
+function player(name, board) {
+  const playerName = name;
+  let gameBoard = board;
+  let AI = false;
+
+
+  const attack = (board, coord)=>{
+    board.receiveAttack(coord)
+  }
+
+  const setAsComputer = () => {
+    AI = true;
+  };
+
+  return { setAsComputer, attack,  };
+}
