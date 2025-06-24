@@ -98,7 +98,7 @@ function gameBoard(size) {
     for (let y = 0; y < boardSize; y++) {
       let row = "";
       for (let x = 0; x < boardSize; x++) {
-        const cell = board[`${x}, ${y}`];
+        const cell = board[`${x},${y}`];
         if (cell.isHit == true && cell.ship != null) {
           row += " X ";
         } else if (cell.isHit === true) {
@@ -118,6 +118,7 @@ function gameBoard(size) {
     getMissedAttacks,
     getBoard,
     printBoard,
+    getSize: () => boardSize
   };
 }
 
@@ -126,14 +127,25 @@ function player(name, board) {
   let gameBoard = board;
   let AI = false;
 
+  let firedShots = new Set()
 
-  const attack = (board, coord)=>{
-    board.receiveAttack(coord)
+  const generateRandomCoord = () => {
+    let coord = ''
+    do {
+      let x = Math.floor(Math.random() * gameBoard.getSize())
+      let y = Math.floor(Math.random() * gameBoard.getSize())
+      coord = `${x},${y}`
+    } while (firedShots.has(coord))
+      firedShots.add(coord)
+      return coord
   }
+
+
+  const attack = (board, coord) => board.receiveAttack(coord)
 
   const setAsComputer = () => {
     AI = true;
   };
 
-  return { setAsComputer, attack,  };
+  return { setAsComputer, attack, getBoard: () => gameBoard, isComputer: () => AI };
 }
