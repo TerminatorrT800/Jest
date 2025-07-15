@@ -35,5 +35,5 @@ export default function gameLoop() {
         }
     }
 
-    return (init, playTurn)
+    return {init, playTurn}
 }

@@ -1,5 +1,4 @@
-import ship from './ship'
-
+import ship from "./ship.js";
 
 export default function gameBoard(size) {
   let boardSize = size;
@@ -17,7 +16,7 @@ export default function gameBoard(size) {
     return board;
   };
 
-  let board = boardMap();
+  let board = boardMap(boardSize);
   const placeShip = (startCoord, direction, ship) => {
     const [x, y] = startCoord.split(",").map(Number);
 
@@ -101,6 +100,6 @@ export default function gameBoard(size) {
     getMissedAttacks,
     getBoard,
     printBoard,
-    getSize: () => boardSize
+    getSize: () => boardSize,
   };
 }
