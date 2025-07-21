@@ -17,6 +17,7 @@ export default function gameBoard(size) {
   };
 
   let board = boardMap(boardSize);
+
   const placeShip = (startCoord, direction, ship) => {
     const [x, y] = startCoord.split(",").map(Number);
 
@@ -60,7 +61,12 @@ export default function gameBoard(size) {
   const allShipsSunk = () => ships.every((ship) => ship.isSunk());
 
   const receiveAttack = (coord) => {
-    if (board[coord].isHit != null) return;
+    if (!board[coord]) return 0;
+
+    if (board[coord].isHit != null) {
+      missedAttacks.push(coord);
+      return;
+    }
 
     board[coord].isHit = true;
 

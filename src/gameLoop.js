@@ -6,11 +6,11 @@ export default function gameLoop() {
     let player2;
     let currentPlayer;
 
-    const init = () => {
-        const board1 = gameBoard(5)
-        const board2 = gameBoard(5)
+    const init = (name, boardSize) => {
+        const board1 = gameBoard(boardSize)
+        const board2 = gameBoard(boardSize)
 
-        player1 = player('You', board1)
+        player1 = player(name, board1)
         player2 = player('Computer', board2)
 
         player2.setAsComputer()
@@ -23,7 +23,7 @@ export default function gameLoop() {
         const result = currentPlayer.attack(targetBoard, coord)
 
         if(targetBoard.allShipsSunk()){
-            console.log(`${currentPlayer === player1 ? "You" : "Computer"} win!`);
+            console.log(`${currentPlayer === player1 ? player1.getName() : "Computer"} win!`);
             return
         }
 

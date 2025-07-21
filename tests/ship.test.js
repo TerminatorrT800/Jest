@@ -15,12 +15,24 @@ test("isSunk() returns true when ship is sunk", () => {
 });
 
 test("allShipsSunk() returns true when all ships are sunk", () => {
-  const myShip = ship(2)
-  const myBoard = gameBoard(5)
-  myBoard.placeShip('2,2', 'horizontal', myShip)
-  myBoard.receiveAttack('2,2')
-  myBoard.receiveAttack('3,2')
-  expect(myBoard.allShipsSunk()).toBe(true)
-  expect(myBoard.getMissedAttacks().length).toBe(0)
-  expect(myBoard.receiveAttack('0,0')).toBe('Miss')
+  const myShip = ship(2);
+  const myBoard = gameBoard(5);
+  myBoard.placeShip("2,2", "horizontal", myShip);
+  myBoard.receiveAttack("2,2");
+  myBoard.receiveAttack("3,2");
+  myBoard.receiveAttack("8,2");
+  myBoard.receiveAttack("3,2");
+  expect(myBoard.allShipsSunk()).toBe(true);
+  expect(myBoard.getMissedAttacks().length).toBe(1);
+  expect(myBoard.receiveAttack("0,0")).toBe("Miss");
+  
+});
+
+test("getMissedAttacks() counts missed attacks", () => {
+const myShip = ship(2);
+  const myBoard = gameBoard(5);
+  myBoard.placeShip("2,2", "horizontal", myShip);
+  myBoard.receiveAttack("8,2");
+  myBoard.receiveAttack("4,2");
+  expect(myBoard.getMissedAttacks().length).toBe(1)
 });
