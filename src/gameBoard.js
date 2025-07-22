@@ -9,7 +9,7 @@ export default function gameBoard(size) {
   let boardMap = (boardSize) => {
     let board = {};
     for (let i = 0; i < boardSize; i++) {
-      for (let j = 0; j < size; j++) {
+      for (let j = 0; j < boardSize; j++) {
         board[`${i},${j}`] = { ship: null, isHit: null };
       }
     }
@@ -60,24 +60,45 @@ export default function gameBoard(size) {
 
   const allShipsSunk = () => ships.every((ship) => ship.isSunk());
 
+  // const receiveAttack = (coord) => {
+  //   if (!board[coord]) return 0;
+
+  //   if (board[coord].isHit != null) {
+  //     missedAttacks.push(coord);
+  //     return;
+  //   }
+
+  //   board[coord].isHit = true;
+
+  //   if (board[coord].ship != null) {
+  //     board[coord].ship.hit();
+  //     return "Hit";
+  //   } else {
+  //     missedAttacks.push(coord);
+  //     return "Miss";
+  //   }
+  // };
+
   const receiveAttack = (coord) => {
     if (!board[coord]) return 0;
 
-    if (board[coord].isHit != null) {
-      missedAttacks.push(coord);
-      return;
-    }
-
-    board[coord].isHit = true;
-
     if (board[coord].ship != null) {
-      board[coord].ship.hit();
-      return "Hit";
+      if (board[coord].isHit == null) {
+        board[coord].ship.hit()
+        board[coord].isHit = true;
+        return 'Hit'
+      } else {
+        missedAttacks.push(coord)
+        return 'Miss'
+      }
     } else {
-      missedAttacks.push(coord);
-      return "Miss";
+      board[coord].isHit = true;
+      missedAttacks.push(coord)
+      return 'Miss'
     }
-  };
+  }
+
+
 
   const getMissedAttacks = () => missedAttacks;
   const getBoard = () => board;

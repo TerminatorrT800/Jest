@@ -6,24 +6,24 @@ export default function gameLoop() {
     let player2;
     let currentPlayer;
 
-    const init = (name, boardSize) => {
-        const board1 = gameBoard(boardSize)
-        const board2 = gameBoard(boardSize)
+    const init = (player, cpu) => {
+        const board1 = player.getBoard()
+        const board2 = cpu.getBoard()
 
-        player1 = player(name, board1)
-        player2 = player('Computer', board2)
+        player1 = player
+        player2 = cpu
 
-        player2.setAsComputer()
         currentPlayer = player1;
     }
 
 
     const playTurn = (coord)=>{
         const targetBoard = currentPlayer ===player1 ? player2.getBoard() : player1.getBoard()
-        const result = currentPlayer.attack(targetBoard, coord)
+        currentPlayer.attack(targetBoard, coord)
+        let message;
 
         if(targetBoard.allShipsSunk()){
-            console.log(`${currentPlayer === player1 ? player1.getName() : "Computer"} win!`);
+            message =(`${currentPlayer === player1 ? player1.getName() : "Computer"} win!`);
             return
         }
 
@@ -32,6 +32,7 @@ export default function gameLoop() {
         if(currentPlayer.isComputer()){
             const coord = currentPlayer.generateRandomCoord()
             playTurn(coord)
+            if(message) return message
         }
     }
 

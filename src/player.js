@@ -41,6 +41,8 @@ export default function player(name, board) {
     isComputer: () => AI,
     resetFiredshoots,
     makeMove,
-    getName: () => player,
+    getName: () => playerName,
+    generateRandomCoord,
+    getFiredShoots: () => firedShots
   };
 }
