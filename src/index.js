@@ -1,4 +1,5 @@
 import gameLoop from './gameLoop.js';
+import './style.css';
 
 const game = gameLoop();
 game.init();
