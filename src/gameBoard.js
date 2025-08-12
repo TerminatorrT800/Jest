@@ -128,5 +128,6 @@ export default function gameBoard(size) {
     getBoard,
     printBoard,
     getSize: () => boardSize,
+    getOccupiedCoords: () => occupiedCoords,
   };
 }

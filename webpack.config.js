@@ -1,5 +1,6 @@
 import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import copyWebpackPlugin from 'copy-webpack-plugin'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
@@ -18,6 +19,11 @@ export default {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
+    new copyWebpackPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src/icons'), to: 'icons' },
+      ]
+    })
   ],
   module: {
     rules: [
