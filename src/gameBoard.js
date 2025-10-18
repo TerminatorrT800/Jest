@@ -60,25 +60,6 @@ export default function gameBoard(size) {
 
   const allShipsSunk = () => ships.every((ship) => ship.isSunk());
 
-  // const receiveAttack = (coord) => {
-  //   if (!board[coord]) return 0;
-
-  //   if (board[coord].isHit != null) {
-  //     missedAttacks.push(coord);
-  //     return;
-  //   }
-
-  //   board[coord].isHit = true;
-
-  //   if (board[coord].ship != null) {
-  //     board[coord].ship.hit();
-  //     return "Hit";
-  //   } else {
-  //     missedAttacks.push(coord);
-  //     return "Miss";
-  //   }
-  // };
-
   const receiveAttack = (coord) => {
     if (!board[coord]) return 0;
 

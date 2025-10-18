@@ -1,40 +1,53 @@
-import player from './player.js';
-import gameBoard from './gameBoard.js';
+import player from "./player.js";
+import gameBoard from "./gameBoard.js";
 
 export default function gameLoop() {
-    let player1;
-    let player2;
-    let currentPlayer;
+  let player1;
+  let player2;
+  let currentPlayer;
 
-    const init = (player, cpu) => {
-        const board1 = player.getBoard()
-        const board2 = cpu.getBoard()
+  const init = (player, cpu) => {
+    const board1 = player.getBoard();
+    const board2 = cpu.getBoard();
 
-        player1 = player
-        player2 = cpu
+    player1 = player;
+    player2 = cpu;
 
-        currentPlayer = player1;
+    currentPlayer = player1;
+  };
+
+  const playTurn = (coord) => {
+    const targetBoard =
+      currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
+
+    const result = currentPlayer.attack(targetBoard, coord);
+
+    if (targetBoard.allShipsSunk()) {
+      return `${currentPlayer.getName()} wins!`;
     }
 
 
-    const playTurn = (coord)=>{
-        const targetBoard = currentPlayer ===player1 ? player2.getBoard() : player1.getBoard()
-        currentPlayer.attack(targetBoard, coord)
-        let message;
-
-        if(targetBoard.allShipsSunk()){
-            message =(`${currentPlayer === player1 ? player1.getName() : "Computer"} win!`);
-            return
-        }
-
-        currentPlayer = currentPlayer === player1 ? player2 : player1
-
-        if(currentPlayer.isComputer()){
-            const coord = currentPlayer.generateRandomCoord()
-            playTurn(coord)
-            if(message) return message
-        }
+    if (currentPlayer === player1) {
+      setCurrentPlayer(player2);
+    } else {
+      setCurrentPlayer(player1);
     }
 
-    return {init, playTurn}
+    if (
+      currentPlayer.isComputer() &&
+      !player1.getBoard().allShipsSunk() &&
+      !player2.getBoard().allShipsSunk()
+    ) {
+      const coord = currentPlayer.generateRandomCoord();
+      playTurn(coord);
+    }
+
+    return result;
+  };
+
+  const setCurrentPlayer = (player) => {
+    currentPlayer = player;
+  };
+
+  return { init, playTurn, getCurrentPlayer: () => currentPlayer };
 }
