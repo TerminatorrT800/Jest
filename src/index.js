@@ -4,16 +4,33 @@ import gameLoop from "./gameLoop.js";
 import player from "./player.js";
 import ship from "./ship.js";
 
-const BOARD_SIZE = 5;
+const BOARD_SIZE = 10;
 
 const playerBoardDiv = document.getElementById("player-board");
 const enemyBoardDiv = document.getElementById("enemy-board");
 const startBtn = document.getElementById("start-btn");
+const resetBtn = document.getElementById("reset-btn");
+resetBtn.disabled = true;
+
+
 
 let p1;
 let cpu;
 let currentGame = null;
+
+resetBtn.addEventListener("click", async () => {
+  startBtn.disabled = false;
+  resetBtn.disabled = true;
+  await createGame();
+});
+
 startBtn.addEventListener("click", async () => {
+  await createGame();
+});
+
+async function createGame(){
+startBtn.disabled = true;
+  resetBtn.disabled = false;
   const P1Board = gameBoard(BOARD_SIZE);
   const CPUBoard = gameBoard(BOARD_SIZE);
   const p1 = player("T800", P1Board);
@@ -34,20 +51,22 @@ startBtn.addEventListener("click", async () => {
   console.log("CPU Board:", cpu.getBoard());
   currentGame = game;
 
-  createGrid(playerBoardDiv, p1.getBoard(), false, BOARD_SIZE, currentGame);
-  createGrid(enemyBoardDiv, cpu.getBoard(), true, BOARD_SIZE, currentGame);
+  createGrid(playerBoardDiv, p1.getBoard(), p1.isComputer(), BOARD_SIZE, currentGame);
+  createGrid(enemyBoardDiv, cpu.getBoard(), cpu.isComputer(), BOARD_SIZE, currentGame);
 
   console.log("Current Game:", currentGame);
-});
+}
 
-function createGrid(container, board, isEnemy = false, BOARD_SIZE, game) {
+function createGrid(container, board, isPlayer = true, BOARD_SIZE, game) {
   container.innerHTML = "";
+  container.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 40px)`;
+  container.style.gridTemplateRows = `repeat(${BOARD_SIZE}, 40px)`;
   for (let i = 0; i < BOARD_SIZE; i++) {
     for (let j = 0; j < BOARD_SIZE; j++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
       cell.dataset.coord = `${i},${j}`;
-      if (isEnemy) {
+      if (isPlayer) {
         cell.addEventListener("click", () => {
           if (
             !cell.classList.contains("hit") &&

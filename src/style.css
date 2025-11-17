@@ -3,6 +3,11 @@
       margin: 0;
       padding: 20px;
       background-color: #f3f3f3;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-direction: column;
+      align-items: center;
     }
     h1 {
       text-align: center;
@@ -15,8 +20,8 @@
     }
     .board {
       display: grid;
-      grid-template-columns: repeat(5, 40px);
-      grid-template-rows: repeat(5, 40px);
+      grid-template-columns: repeat(0, 40px);
+      grid-template-rows: repeat(0, 40px);
       gap: 5px;
     }
     .cell {
@@ -29,6 +34,10 @@
       cursor: pointer;
     }
     .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
       margin-top: 40px;
       text-align: center;
     }

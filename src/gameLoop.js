@@ -7,9 +7,6 @@ export default function gameLoop() {
   let currentPlayer;
 
   const init = (player, cpu) => {
-    const board1 = player.getBoard();
-    const board2 = cpu.getBoard();
-
     player1 = player;
     player2 = cpu;
 
