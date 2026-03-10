@@ -22,6 +22,7 @@ export default function gameLoop() {
     if (targetBoard.allShipsSunk()) {
       return `${currentPlayer.getName()} wins!`;
     }
+    currentPlayer.lastMove = { coord, result };
 
 
     if (currentPlayer === player1) {
@@ -31,6 +32,26 @@ export default function gameLoop() {
     }
     let cpuCoord;
     if (
+      currentPlayer.isComputer() &&
+      !player1.getBoard().allShipsSunk() &&
+      !player2.getBoard().allShipsSunk() &&
+      currentPlayer.lastMove.result === "Hit"
+    ) {
+      let x = parseInt(currentPlayer.lastMove.coord.split(",")[0]);
+      let y = parseInt(currentPlayer.lastMove.coord.split(",")[1]);
+      const potentialCoords = [
+        `${x + 1},${y}`,
+        `${x - 1},${y}`,
+        `${x},${y + 1}`,
+        `${x},${y - 1}`
+      ].filter((coord) => !currentPlayer.getFiredShoots().has(coord));
+
+      cpuCoord = potentialCoords.length > 0
+        ? potentialCoords[Math.floor(Math.random() * potentialCoords.length)]
+        : currentPlayer.generateRandomCoord();
+      playTurn(cpuCoord);
+    }
+    else if (
       currentPlayer.isComputer() &&
       !player1.getBoard().allShipsSunk() &&
       !player2.getBoard().allShipsSunk()

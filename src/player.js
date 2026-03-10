@@ -2,6 +2,7 @@ export default function player(name, board) {
   const playerName = name;
   let gameBoard = board;
   let AI = false;
+  let lastMove = { coord: null, result: null };
 
   let firedShots = new Set();
 
