@@ -1,4 +1,4 @@
-const { ship } = require("./ship.js");
+import ship from "./ship.js";
 
 
 export default function Inventory(boardSize) {
@@ -7,7 +7,7 @@ export default function Inventory(boardSize) {
   let numberOfShips = Math.ceil(boardSize / 2);
 
   let minShipLength = 2;
-  let maxShipLength = boardSize - minShipLength;
+  let maxShipLength = boardSize - minShipLength > 6 ? 6 : boardSize - minShipLength;
 
   
 
@@ -16,11 +16,11 @@ export default function Inventory(boardSize) {
   const generateShips = () => {
     for (let i = 0; i < numberOfShips; i++) {
       let shipLength = Math.floor(Math.random() * (maxShipLength - minShipLength + 1)) + minShipLength;
-      let ship = ship(shipLength);
-      addShip(ship);
+      let newShip = ship(shipLength);
+      addShip(newShip);
     }
 
   };
 
-  return { addShip, getShips: () => ships };
+  return { addShip, getShips: () => ships, generateShips, getNumberOfShips: () => numberOfShips };
 }

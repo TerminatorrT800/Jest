@@ -1,10 +1,19 @@
 import ship from "./ship.js";
+import Directions from "./directions.js";
 
 export default function gameBoard(size) {
   let boardSize = size;
   let ships = [];
   let missedAttacks = [];
   let occupiedCoords = new Set();
+  let availableCoords = new Set();
+  let startingCoords = new Set();
+
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      availableCoords.add(`${i},${j}`);
+    }
+  }
 
   let boardMap = (boardSize) => {
     let board = {};
@@ -18,23 +27,23 @@ export default function gameBoard(size) {
 
   let board = boardMap(boardSize);
 
-  const placeShip = (startCoord, direction, ship) => {
+  const placeShip = (startCoord, ship) => {
     const [x, y] = startCoord.split(",").map(Number);
 
     if (
-      (direction == "horizontal" && boardSize < ship.getLength() + x) ||
-      (direction == "vertical" && boardSize < ship.getLength() + y)
+      (ship.getDirection() == Directions.HORIZONTAL && boardSize < ship.getLength() + x) ||
+      (ship.getDirection() == Directions.VERTICAL && boardSize < ship.getLength() + y)
     ) {
       console.log("Invalid coordinates or ship lenght!");
     } else {
       let shipCoords = new Set();
-      switch (direction) {
-        case "horizontal":
+      switch (ship.getDirection()) {
+        case Directions.HORIZONTAL:
           for (let i = 0; i < ship.getLength(); i++) {
-            shipCoords.add(`${x + i},${y}`);
+            shipCoords.add(`${x + i},${y}`);                                                     
           }
           break;
-        case "vertical":
+        case Directions.VERTICAL:
           for (let i = 0; i < ship.getLength(); i++) {
             shipCoords.add(`${x},${y + i}`);
           }
@@ -43,17 +52,34 @@ export default function gameBoard(size) {
       let able = true;
 
       for (const coord of shipCoords) {
-        if (occupiedCoords.has(coord)) {
+        if (!availableCoords.has(coord)) {
           able = false;
+          console.log("Cannot place ship here, coordinates occupied!");
           break;
         }
       }
       if (able == true) {
         ships.push(ship);
+        let coordNum = startCoord.split(",").map(Number);
         shipCoords.forEach((cord) => {
+          coordNum = cord.split(",").map(Number);
           occupiedCoords.add(cord);
+          availableCoords.delete(cord);
+          availableCoords.delete(`${coordNum[0]},${coordNum[1]-1}`);
+           availableCoords.delete(`${coordNum[0]-1},${coordNum[1]}`);
+           availableCoords.delete(`${coordNum[0]-1},${coordNum[1]-1}`);
+           availableCoords.delete(`${coordNum[0]-1},${coordNum[1]+1}`);
+           availableCoords.delete(`${coordNum[0]+1},${coordNum[1]-1}`);
+           availableCoords.delete(`${coordNum[0]+1},${coordNum[1]+1}`);
+           ship.Directions == Directions.HORIZONTAL
+             ? availableCoords.delete(`${coordNum[0]},${coordNum[1]+1}`)
+             : availableCoords.delete(`${coordNum[0]+1},${coordNum[1]}`);
           board[cord].ship = ship;
         });
+        ship.Directions == Directions.HORIZONTAL
+          ? availableCoords.delete(`${coordNum[0]+1},${coordNum[1]}`)
+          : availableCoords.delete(`${coordNum[0]},${coordNum[1]+1}`)       
+        return true;
       } else return false;
     }
   };
@@ -101,6 +127,8 @@ export default function gameBoard(size) {
     }
   };
 
+  const addStartingCoord = (coord) => startingCoords.add(coord);
+
   return {
     placeShip,
     allShipsSunk,
@@ -110,5 +138,8 @@ export default function gameBoard(size) {
     printBoard,
     getSize: () => boardSize,
     getOccupiedCoords: () => occupiedCoords,
+    getAvailableCoords: () => availableCoords,
+    addStartingCoord,
+    getStartingCoords: () => startingCoords,
   };
 }

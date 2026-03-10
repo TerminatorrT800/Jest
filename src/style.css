@@ -1,100 +1,120 @@
  body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f3f3f3;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      text-align: center;
-    }
-    .board-container {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 30px;
-    }
-    .board {
-      display: grid;
-      grid-template-columns: repeat(0, 40px);
-      grid-template-rows: repeat(0, 40px);
-      gap: 5px;
-    }
-    .cell {
-      width: 40px;
-      height: 40px;
-      background-color: lightblue;
-      border: 1px solid #999;
-      text-align: center;
-      line-height: 40px;
-      cursor: pointer;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      margin-top: 40px;
-      text-align: center;
-    }
+   font-family: Arial, sans-serif;
+   margin: 0;
+   padding: 20px;
+   background-color: #f3f3f3;
+   display: flex;
+   justify-content: center;
+   gap: 20px;
+   flex-direction: column;
+   align-items: center;
+ }
 
-    .ship{
-      background-color: #ffcc00;
-    }
+ h1 {
+   text-align: center;
+ }
 
+ .board-container {
+   display: flex;
+   justify-content: center;
+   gap: 40px;
+   margin-top: 30px;
+ }
 
-    .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
+ .board {
+   display: grid;
+   grid-template-columns: repeat(0, 40px);
+   grid-template-rows: repeat(0, 40px);
+   gap: 5px;
+ }
 
-.hidden {
-  display: none !important;
-}
+ .cell {
+   width: 40px;
+   height: 40px;
+   background-color: lightblue;
+   border: 1px solid #999;
+   text-align: center;
+   line-height: 40px;
+   font-size: medium;
+ }
+ .cell.clickable {
+   cursor: pointer;
+ }
+ .cell.clickable:hover {
+   background-color: #89ceeb;
+ }
+ .cell.hit{
+   background-color: rgb(219, 232, 237);
+ }
 
-.modal {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+ .controls {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 20px;
+   margin-top: 40px;
+   text-align: center;
+ }
 
-.modal input {
-  width: 100%;
-  height: 32px;
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #aaa;
-}
+ .ship {
+   background-color: #ffcc00;
+ }
 
-.toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+ .cell.ship.player1-cell.hit {
+   background-color: #e8d179;
+ }
 
-.modal-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
+ .available {
+   background-color: #1074e0;
+ }
 
-.modal-buttons button {
-  padding: 6px 12px;
-  cursor: pointer;
-}
+ .modal-overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0.55);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 10;
+ }
+
+ .hidden {
+   display: none !important;
+ }
+
+ .modal {
+   background: white;
+   padding: 25px;
+   border-radius: 10px;
+   width: 300px;
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+ }
+ .modal input {
+   width: 100%;
+   height: 32px;
+   padding: 5px;
+   border-radius: 4px;
+   border: 1px solid #aaa;
+ }
+
+ .toggle-row {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+ }
+
+ .modal-buttons {
+   display: flex;
+   justify-content: space-between;
+   margin-top: 10px;
+ }
+
+ .modal-buttons button {
+   padding: 6px 12px;
+   cursor: pointer;
+ }

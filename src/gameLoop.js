@@ -29,17 +29,17 @@ export default function gameLoop() {
     } else {
       setCurrentPlayer(player1);
     }
-
+    let cpuCoord;
     if (
       currentPlayer.isComputer() &&
       !player1.getBoard().allShipsSunk() &&
       !player2.getBoard().allShipsSunk()
     ) {
-      const coord = currentPlayer.generateRandomCoord();
-      playTurn(coord);
+      cpuCoord = currentPlayer.generateRandomCoord();
+      playTurn(cpuCoord);
     }
 
-    return result;
+    return {result, cpuCoord};
   };
 
   const setCurrentPlayer = (player) => {

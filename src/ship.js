@@ -1,16 +1,16 @@
-const Directions  = require("./directions.js");
+import Directions from "./directions.js";
 
 export default function ship(shipLength) {
   let length = shipLength;
   let hits = 0;
 
-  let direction = Directions.right;
+  let direction = Directions.HORIZONTAL;
 
   const isSunk = () => hits >= length;
 
   const hit = () => hits++;
 
-  const setDirection = (direction) => (direction = direction);
+  const setDirection = (newDirection) => (direction = newDirection);
 
   return {
     isSunk,

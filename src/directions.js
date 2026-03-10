@@ -1,8 +1,6 @@
 const Directions = {
-  up: "UP",
-  down: "DOWN",
-  left: "LEFT",
-  right: "RIGHT",
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical",
 };
 
 export default Directions;
