@@ -19,7 +19,7 @@ test("isSunk() returns true when ship is sunk", () => {
 test("allShipsSunk() returns true when all ships are sunk", () => {
   const myShip = ship(2);
   const myBoard = gameBoard(5);
-  myBoard.placeShip("2,2", "horizontal", myShip);
+  myBoard.placeShip("2,2", myShip);
   myBoard.receiveAttack("2,2");
   myBoard.receiveAttack("3,2");
   myBoard.receiveAttack("8,2");
@@ -32,7 +32,7 @@ test("allShipsSunk() returns true when all ships are sunk", () => {
 test("getMissedAttacks() counts missed attacks", () => {
   const myShip = ship(2);
   const myBoard = gameBoard(5);
-  myBoard.placeShip("2,2", "horizontal", myShip);
+  myBoard.placeShip("2,2", myShip);
   myBoard.receiveAttack("8,2");
   myBoard.receiveAttack("4,2");
   expect(myBoard.getMissedAttacks().length).toBe(1);
@@ -51,8 +51,8 @@ test("playTurn() player wins", () => {
   const firstShip = ship(2);
   const secondShip = ship(2);
 
-  p1.getBoard().placeShip("2,2", "horizontal", firstShip);
-  cpu.getBoard().placeShip("2,2", "horizontal", secondShip);
+  p1.getBoard().placeShip("2,2", firstShip);
+  cpu.getBoard().placeShip("2,2", secondShip);
 
   game.init(p1, cpu);
 

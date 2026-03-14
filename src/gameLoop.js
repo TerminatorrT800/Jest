@@ -35,7 +35,7 @@ export default function gameLoop() {
       currentPlayer.isComputer() &&
       !player1.getBoard().allShipsSunk() &&
       !player2.getBoard().allShipsSunk() &&
-      currentPlayer.lastMove.result === "Hit"
+      currentPlayer.getLastMove().result === "Hit"
     ) {
       let x = parseInt(currentPlayer.lastMove.coord.split(",")[0]);
       let y = parseInt(currentPlayer.lastMove.coord.split(",")[1]);

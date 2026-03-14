@@ -44,6 +44,7 @@ export default function player(name, board) {
     makeMove,
     getName: () => playerName,
     generateRandomCoord,
-    getFiredShoots: () => firedShots
+    getFiredShoots: () => firedShots,
+    getLastMove: () => lastMove
   };
 }
