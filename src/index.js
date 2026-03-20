@@ -112,7 +112,7 @@ function createGrid(container, board, isCPUBoard = false, BOARD_SIZE, game) {
             const result = game.playTurn(`${j},${i}`);
             if (!result.result) {
               alert(result);
-              return;
+              
             }
             const player1Cell = playerBoardDiv.querySelector(`[data-coord="${result.cpuCoord}"]`);
               if (player1Cell) {
@@ -172,6 +172,7 @@ function collectGameData(callback) {
 }
 
 function deployShipsRandomly(player, inventory) {
+  //ODUZMI I PROBANE KOORDINATE U AVAILABLE
   const availableCoords = player.getBoard().getAvailableCoords();
   for (const ship of inventory.getShips()) {
     let placed = false;

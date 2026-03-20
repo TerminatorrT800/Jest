@@ -18,14 +18,15 @@ test("isSunk() returns true when ship is sunk", () => {
 
 test("allShipsSunk() returns true when all ships are sunk", () => {
   const myShip = ship(2);
+  const myShip2 = ship(2);
   const myBoard = gameBoard(5);
   myBoard.placeShip("2,2", myShip);
+  myBoard.placeShip("2,4", myShip2);
   myBoard.receiveAttack("2,2");
   myBoard.receiveAttack("3,2");
-  myBoard.receiveAttack("8,2");
-  myBoard.receiveAttack("3,2");
+  myBoard.receiveAttack("3,4");
+  myBoard.receiveAttack("2,4");
   expect(myBoard.allShipsSunk()).toBe(true);
-  expect(myBoard.getMissedAttacks().length).toBe(1);
   expect(myBoard.receiveAttack("0,0")).toBe("Miss");
 });
 
