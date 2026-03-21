@@ -170,21 +170,3 @@ function collectGameData(callback) {
     boardSize,
   });
 }
-
-function deployShipsRandomly(player, inventory) {
-  //ODUZMI I PROBANE KOORDINATE U AVAILABLE
-  const availableCoords = player.getBoard().getAvailableCoords();
-  for (const ship of inventory.getShips()) {
-    let placed = false;
-    const direction = Math.random() < 0.5 ? Directions.HORIZONTAL : Directions.VERTICAL;
-    ship.setDirection(direction);
-    let randomCoord = Array.from(availableCoords)[Math.floor(Math.random() * availableCoords.size)];
-    while (!placed) {
-      randomCoord = Array.from(availableCoords)[Math.floor(Math.random() * availableCoords.size)];
-      console.log(`Trying to place ship of length ${ship.getLength()} at ${randomCoord} facing ${direction}`);
-      placed = player.getBoard().placeShip(randomCoord, ship);
-    }
-    player.getBoard().addStartingCoord(randomCoord);
-  }
-
-}
