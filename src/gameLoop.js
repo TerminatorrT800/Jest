@@ -14,7 +14,7 @@ export default function gameLoop() {
   };
 
   const playTurn = (coord) => {
-    const targetBoard =
+    let targetBoard =
       currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
     console.log(targetBoard.getBoard());
     const result = currentPlayer.attack(targetBoard, coord);

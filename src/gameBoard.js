@@ -129,6 +129,22 @@ export default function gameBoard(size) {
     }
   };
 
+  const reset = () => {
+  ships = [];
+  missedAttacks = [];
+  occupiedCoords = new Set();
+  startingCoords = new Set();
+  
+  availableCoords = new Set();
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      availableCoords.add(`${i},${j}`);
+    }
+  }
+  
+  board = boardMap(boardSize);
+};
+
   const addStartingCoord = (coord) => startingCoords.add(coord);
 
   return {
@@ -143,5 +159,6 @@ export default function gameBoard(size) {
     getAvailableCoords: () => availableCoords,
     addStartingCoord,
     getStartingCoords: () => startingCoords,
+    reset,
   };
 }
