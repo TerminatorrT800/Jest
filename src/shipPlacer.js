@@ -1,7 +1,7 @@
-import Directions from "./directions";
-import ship from "./ship";
-import player from "./player";
-import gameBoard from "./gameBoard";
+import Directions from "./directions.js";
+import ship from "./ship.js";
+import player from "./player.js";
+import gameBoard from "./gameBoard.js";
 
 function tryPlaceShip(player, ship, maxAttempts = 30) {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {

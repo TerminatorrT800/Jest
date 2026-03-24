@@ -5,6 +5,7 @@ import player from "./player.js";
 import ship from "./ship.js";
 import Inventory from "./inventory.js";
 import Directions from "./directions.js";
+import { deployShipsRandomly } from "./shipPlacer.js";
 
 const BOARD_SIZE = 10;
 
