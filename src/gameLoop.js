@@ -14,55 +14,39 @@ export default function gameLoop() {
   };
 
   const playTurn = (coord) => {
-    let targetBoard =
-      currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
-    console.log(targetBoard.getBoard());
+    const targetBoard = currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
     const result = currentPlayer.attack(targetBoard, coord);
 
     if (targetBoard.allShipsSunk()) {
-      return `${currentPlayer.getName()} wins!`;
+      return { result, Winner: `${currentPlayer.getName()} wins!` };
     }
-    currentPlayer.lastMove = { coord, result };
 
-
+    const cpuLastMove = currentPlayer.getLastMove();
     if (currentPlayer === player1) {
       setCurrentPlayer(player2);
     } else {
       setCurrentPlayer(player1);
     }
+
     let cpuCoord;
-    if (
-      currentPlayer.isComputer() &&
-      !player1.getBoard().allShipsSunk() &&
-      !player2.getBoard().allShipsSunk() &&
-      currentPlayer.getLastMove().result === "Hit"
-    ) {
-      let x = parseInt(currentPlayer.lastMove.coord.split(",")[0]);
-      let y = parseInt(currentPlayer.lastMove.coord.split(",")[1]);
-      const potentialCoords = [
-        `${x + 1},${y}`,
-        `${x - 1},${y}`,
-        `${x},${y + 1}`,
-        `${x},${y - 1}`
-      ].filter((coord) => !currentPlayer.getFiredShoots().has(coord));
-
-      cpuCoord = potentialCoords.length > 0
-        ? potentialCoords[Math.floor(Math.random() * potentialCoords.length)]
+    if (currentPlayer.isComputer() && !player1.getBoard().allShipsSunk()) {
+      cpuCoord = cpuLastMove.result === "Hit"
+        ? currentPlayer.generateRandomCoord()
         : currentPlayer.generateRandomCoord();
-      playTurn(cpuCoord);
-    }
-    else if (
-      currentPlayer.isComputer() &&
-      !player1.getBoard().allShipsSunk() &&
-      !player2.getBoard().allShipsSunk()
-    ) {
-      cpuCoord = currentPlayer.generateRandomCoord();
-      playTurn(cpuCoord);
+
+      const cpuResult = currentPlayer.attack(player1.getBoard(), cpuCoord);
+      currentPlayer.setLastMove({ coord: cpuCoord, result: cpuResult });
+
+      if (player1.getBoard().allShipsSunk()) {
+        return { result, cpuCoord, cpuWinner: `${currentPlayer.getName()} wins!` };
+      }
+
+      setCurrentPlayer(player1);
+      return { result, cpuCoord };
     }
 
-    return {result, cpuCoord};
+    return { result, cpuCoord };
   };
-
   const setCurrentPlayer = (player) => {
     currentPlayer = player;
   };

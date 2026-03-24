@@ -84,9 +84,7 @@ export default function gameBoard(size) {
     }
   };
 
-  const allShipsSunkOLD = () => ships.every((ship) => ship.isSunk());
-
-  const allShipsSunk = () => Array.from(Object.values(board)).every(ship => ship.ship != null && ship.isHit == true || ship.ship == null); 
+  const allShipsSunk = () => ships.length > 0 && ships.every((ship) => ship.isSunk());
 
   const receiveAttack = (coord) => {
     if (!board[coord]) return 0;

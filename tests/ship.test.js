@@ -1,5 +1,6 @@
 import gameBoard from "../src/gameBoard.js";
 import gameLoop from "../src/gameLoop.js";
+import Inventory from "../src/inventory.js";
 import player from "../src/player.js";
 import ship from "../src/ship.js";
 
@@ -64,3 +65,13 @@ test("playTurn() player wins", () => {
   expect(p1.getName()).toBe("T800");
   expect(cpu.getBoard().allShipsSunk()).toBe(true);
 });
+
+test(`Ship number`, ()=>{
+  const BOARD_SIZE = 5;
+  const p1Board = gameBoard(BOARD_SIZE);
+  const p2Board = gameBoard(BOARD_SIZE);
+
+  const shipInventory = Inventory(BOARD_SIZE);
+  shipInventory.generateShips();
+  expect(shipInventory.getNumberOfShips()).toBe(Math.ceil(BOARD_SIZE / 2));
+})

@@ -18,28 +18,19 @@ const resetBtn = document.getElementById("reset-btn");
 const configModal = document.getElementById("config-modal");
 const cancelConfig = document.getElementById("cancel-config");
 const confirmConfig = document.getElementById("confirm-config");
-const cpuToggle = document.getElementById("cpu-toggle");
 const p1Input = document.getElementById("p1-name");
-const p2Input = document.getElementById("p2-name");
 const boardSizeInput = document.getElementById("board-size");
 resetBtn.disabled = true;
 
 
 let currentGame = null;
 
+let gameOver = false;
+
 cancelConfig.addEventListener("click", () => {
   configModal.classList.add("hidden");
 });
 
-cpuToggle.addEventListener("change", () => {
-  if (cpuToggle.checked) {
-    p2Input.disabled = true;
-    p2Input.value = "CPU";
-  } else {
-    p2Input.disabled = false;
-    p2Input.value = "";
-  }
-});
 
 confirmConfig.addEventListener("click", () => {
   collectGameData(createGame);
@@ -51,6 +42,14 @@ confirmConfig.addEventListener("click", () => {
 resetBtn.addEventListener("click", async () => {
   startBtn.disabled = false;
   resetBtn.disabled = true;
+  p1.getBoard().reset();
+  cpu.getBoard().reset();
+  currentGame = null;
+  p1.resetFiredshoots();
+  cpu.resetFiredshoots();
+  gameOver = false;
+  playerBoardDiv.innerHTML = "";
+  enemyBoardDiv.innerHTML = "";
 });
 
 startBtn.addEventListener("click", async () => {
@@ -66,28 +65,24 @@ async function createGame({ playerOneName, playerTwoName, boardSize } = {}) {
   const CPUBoard = gameBoard(boardSize || BOARD_SIZE);
   const p1 = player(playerOneName, P1Board);
   const cpu = player(playerTwoName, CPUBoard);
-  if (cpuToggle.checked) {
-    cpu.setAsComputer();
-  }
+
+  cpu.setAsComputer();
+
   const game = gameLoop();
 
-  const inventory = Inventory(boardSize || BOARD_SIZE);
-  inventory.generateShips();
+  const p1Inventory = Inventory(boardSize || BOARD_SIZE);
+  p1Inventory.generateShips();
 
-  deployShipsRandomly(p1, inventory);
-  deployShipsRandomly(cpu, inventory);
+  const p2Inventory = Inventory(boardSize || BOARD_SIZE);
+  p2Inventory.generateShips();
 
-  const firstShip = ship(2);
-  const secondShip = ship(2);
-  firstShip.setDirection(Directions.VERTICAL);
+  deployShipsRandomly(p1, p1Inventory);
+  deployShipsRandomly(cpu, p2Inventory);
 
-  //p1.getBoard().placeShip("2,1", firstShip);
-  cpu.getBoard().placeShip("2,3", secondShip);
 
   game.init(p1, cpu);
 
   console.log("Game initialized with player and CPU boards");
-  p1.getBoard().printBoard();
   cpu.getBoard().printBoard();
   currentGame = game;
 
@@ -96,6 +91,7 @@ async function createGame({ playerOneName, playerTwoName, boardSize } = {}) {
 }
 
 function createGrid(container, board, isCPUBoard = false, BOARD_SIZE, game) {
+  gameOver = false;
   container.innerHTML = "";
   container.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 40px)`;
   container.style.gridTemplateRows = `repeat(${BOARD_SIZE}, 40px)`;
@@ -109,57 +105,41 @@ function createGrid(container, board, isCPUBoard = false, BOARD_SIZE, game) {
       if (isCPUBoard) {
         cell.classList.add("clickable");
         cell.addEventListener("click", () => {
+          if (gameOver) return;
           if (!cell.classList.contains("hit") && !cell.classList.contains("miss")) {
-            const result = game.playTurn(`${j},${i}`);
-            if (!result.result) {
-              alert(result);
-              
-            }
-            const player1Cell = playerBoardDiv.querySelector(`[data-coord="${result.cpuCoord}"]`);
-              if (player1Cell) {
-                if(player1Cell.classList.contains("ship")) {
-                  player1Cell.classList.add("hit");
-                  player1Cell.innerText = "X";
-                } else {
-                  player1Cell.classList.add("miss");
-                  player1Cell.innerText = "O";
-                }
-              }
-            console.log(board.allShipsSunk());
-            if (result.result === "Hit") {
-              cell.classList.add("hit");
-              cell.innerText = "X";
-              cell.classList.remove("clickable");
-            }
-            else {
-              cell.classList.add("miss");
-              cell.innerText = "O";
-              cell.classList.remove("clickable");
+            cell.classList.remove("clickable");
+            const outcome = game.playTurn(`${j},${i}`);
+
+            updateCell(cell, outcome.result);
+            updatePlayer1Cell(outcome.cpuCoord);
+
+            const winner = outcome.Winner || outcome.cpuWinner;
+            if (winner) {
+              gameOver = true;
+              document.querySelectorAll(".cell.clickable")
+                .forEach(c => c.classList.remove("clickable"));
+              enemyBoardDiv.style.pointerEvents = "none";
+              alert(winner);
             }
           }
         });
       }
 
-      if(!isCPUBoard) cell.classList.add("player1-cell");
+      if (!isCPUBoard) cell.classList.add("player1-cell");
       if (!isCPUBoard && board.getOccupiedCoords().has(`${j},${i}`)) {
         cell.classList.add("ship");
       }
       container.appendChild(cell);
     }
   }
-  // for (const startingCoord of board.getStartingCoords()) {
-  //   const cell = container.querySelector(`[data-coord="${startingCoord}"]`);
-  //   cell.classList.add("starting");
-  // }
 }
 
 
 
 function collectGameData(callback) {
   const playerOneName = p1Input.value.trim() || "Player 1";
-  const playerTwoName = cpuToggle.checked
-    ? "CPU"
-    : p2Input.value.trim() || "Player 2";
+  const playerTwoName = "CPU"
+    
   const boardSize = parseInt(boardSizeInput.value, 10) || BOARD_SIZE;
 
   playerOneHeader.innerText = `${playerOneName} board`
@@ -170,4 +150,19 @@ function collectGameData(callback) {
     playerTwoName,
     boardSize,
   });
+}
+
+
+function updateCell(cell, result) {
+  cell.classList.add(result === "Hit" ? "hit" : "miss");
+  cell.innerText = result === "Hit" ? "X" : "O";
+}
+
+function updatePlayer1Cell(cpuCoord) {
+  if (!cpuCoord) return;
+  const cell = playerBoardDiv.querySelector(`[data-coord="${cpuCoord}"]`);
+  if (!cell) return;
+  const isShip = cell.classList.contains("ship");
+  cell.classList.add(isShip ? "hit" : "miss");
+  cell.innerText = isShip ? "X" : "O";
 }
