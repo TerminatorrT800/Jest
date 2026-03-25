@@ -14,31 +14,35 @@ export default function gameLoop() {
   };
 
   const playTurn = (coord) => {
-    const targetBoard = currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
+    const targetBoard =
+      currentPlayer === player1 ? player2.getBoard() : player1.getBoard();
     const result = currentPlayer.attack(targetBoard, coord);
 
     if (targetBoard.allShipsSunk()) {
       return { result, Winner: `${currentPlayer.getName()} wins!` };
     }
 
-    const cpuLastMove = currentPlayer.getLastMove();
     if (currentPlayer === player1) {
       setCurrentPlayer(player2);
     } else {
       setCurrentPlayer(player1);
     }
+    const cpuLastMove = currentPlayer.getLastMove();
 
     let cpuCoord;
     if (currentPlayer.isComputer() && !player1.getBoard().allShipsSunk()) {
-      cpuCoord = cpuLastMove.result === "Hit"
-        ? currentPlayer.generateRandomCoord()
-        : currentPlayer.generateRandomCoord();
+      console.log(cpuLastMove);
+      cpuCoord = currentPlayer.CPUsmartAttack(currentPlayer.getLastMove());
 
       const cpuResult = currentPlayer.attack(player1.getBoard(), cpuCoord);
       currentPlayer.setLastMove({ coord: cpuCoord, result: cpuResult });
 
       if (player1.getBoard().allShipsSunk()) {
-        return { result, cpuCoord, cpuWinner: `${currentPlayer.getName()} wins!` };
+        return {
+          result,
+          cpuCoord,
+          cpuWinner: `${currentPlayer.getName()} wins!`,
+        };
       }
 
       setCurrentPlayer(player1);

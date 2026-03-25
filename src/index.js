@@ -39,22 +39,24 @@ confirmConfig.addEventListener("click", () => {
 });
 
 
-resetBtn.addEventListener("click", async () => {
+resetBtn.addEventListener("click", () => {
   startBtn.disabled = false;
   resetBtn.disabled = true;
-  p1.getBoard().reset();
-  cpu.getBoard().reset();
+  p1 = null;  
+  cpu = null;
   currentGame = null;
-  p1.resetFiredshoots();
-  cpu.resetFiredshoots();
   gameOver = false;
   playerBoardDiv.innerHTML = "";
   enemyBoardDiv.innerHTML = "";
+  enemyBoardDiv.style.pointerEvents = "";
 });
 
 startBtn.addEventListener("click", async () => {
   configModal.classList.remove("hidden");
 });
+
+let p1 = null;
+let cpu = null
 
 async function createGame({ playerOneName, playerTwoName, boardSize } = {}) {
 
@@ -63,8 +65,8 @@ async function createGame({ playerOneName, playerTwoName, boardSize } = {}) {
 
   const P1Board = gameBoard(boardSize || BOARD_SIZE);
   const CPUBoard = gameBoard(boardSize || BOARD_SIZE);
-  const p1 = player(playerOneName, P1Board);
-  const cpu = player(playerTwoName, CPUBoard);
+  p1 = player(playerOneName, P1Board);
+  cpu = player(playerTwoName, CPUBoard);
 
   cpu.setAsComputer();
 
